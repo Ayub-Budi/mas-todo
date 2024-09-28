@@ -105,7 +105,7 @@
     </div>
   </div>
 
-  <div
+  <!-- <div
     class="bg-[#000000B2] w-full h-full absolute inset-0 bg-opacity-80"
     :class="{ '': isOpen, hidden: !isOpen }"
     @click.self="isOpen = false"
@@ -130,7 +130,20 @@
       </div>
       <ButtonPrimary class="w-full " @click="submitProject">Submit</ButtonPrimary>
     </div>
-  </div>
+  </div> -->
+
+  <Modal :isOpen="isOpen" title="Tambah project baru" submitLabel="Submit" @close="setModal" @submit="submitProject" >
+    <div class="py-2">
+      <label for="namaProject" class="block mb-2 text-sm font-medium text-gray-900">Nama project</label>
+        <input
+          type="text"
+          id="namaProject"
+          v-model="formData.name"
+          placeholder="Masukan nama project"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:outline-blue-500 block w-full p-2.5 pl-10 pr-[20px] py-2"
+        />
+    </div>
+  </Modal>
 </template>
 
 <script>
