@@ -6,14 +6,13 @@
       </div>
 
       <div>
-        <!-- <ButtonPrimary @click="openSidebar">+ Buat project baru</ButtonPrimary> -->
         <ButtonPrimary @click="openModal">+ Buat project baru</ButtonPrimary>
       </div>
     </div>
 
     <div>
-      <ButtonMinimal>Semua</ButtonMinimal>
-      <ButtonMinimal>Terselesaikan</ButtonMinimal>
+      <ButtonMinimal :class="{ 'active': filterStatus === 'all' }" @click="filterStatus = 'all'">Semua</ButtonMinimal>
+      <ButtonMinimal :class="{ 'active': filterStatus === 'completed' }" @click="filterStatus = 'completed'">Terselesaikan</ButtonMinimal>
     </div>
 
     <div class="grid grid-cols-3 gap-4 mt-5">
@@ -147,11 +146,18 @@ export default {
       itemsPerPage: 6,
       isOpen: false,
       isModalOpen: false,
+      filterStatus: 'all',
     };
   },
 
   computed: {
     projects() {
+      // Filter projects based on the filterStatus value
+      if (this.filterStatus === 'completed') {
+        return this.projectStore.projects.filter(project =>
+          this.totalTodos(project) === this.completedTodos(project)
+        );
+      }
       return this.projectStore.projects;
     },
 
