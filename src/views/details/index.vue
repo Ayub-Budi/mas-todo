@@ -6,14 +6,19 @@
       </div>
       <div class="flex gap-[10px]">
         <div>
-          <ButtonPrimary @click="setModal">+ Buat project baru</ButtonPrimary>
+          <ButtonPrimary @click="openModal1 = true"
+            >+ Buat project baru</ButtonPrimary
+          >
         </div>
         <div>
-          <ButtonPrimary @click="setModal">+ Buat project baru</ButtonPrimary>
+          <ButtonPrimary @click="openModal2 = true"
+            >+ Undang personil</ButtonPrimary
+          >
         </div>
         <div>
           <button
-            @click="showAlert" class="bg-[#E4574E] p-2 rounded-md text-white hover:bg-[#B2443D]"
+            @click="showAlert"
+            class="bg-[#E4574E] p-2 rounded-md text-white hover:bg-[#B2443D]"
           >
             Keluar project
           </button>
@@ -103,23 +108,45 @@
     </div>
   </div> -->
 
-  <Modal :isOpen="isOpen" title="Tambah to-do baru" submitLabel="Submit" @close="setModal" @submit="submitProject" >
+  <Modal
+    v-model="openModal1"
+    title="Tambah to-do baru"
+    submitLabel="Submit"
+    @close="setModal"
+    @submit="submitProject"
+  >
     <div class="py-2">
-      <label for="namalist" class="block mb-2 text-sm font-medium text-gray-900">Nama list</label>
+      <label for="namalist" class="block mb-2 text-sm font-medium text-gray-900"
+        >Nama list</label
+      >
       <input
-          type="text"
-          id="namalist"
-          v-model="formData.description"
-          placeholder="Masukan nama list"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:outline-blue-500 block w-full p-2.5 pl-10 pr-[20px] py-2"
-        />
+        type="text"
+        id="namalist"
+        v-model="formData.description"
+        placeholder="Masukan nama list"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:outline-blue-500 block w-full p-2.5 pl-10 pr-[20px] py-2"
+      />
     </div>
+  </Modal>
+
+  <Modal v-model="openModal2" title="Modal 2" @submit="submitTeam">
+    <label for="team" class="block mb-2 text-sm font-medium text-gray-900"
+      >Email</label
+    >
+    <input
+      type="text"
+      id="team"
+      v-model="formData.email"
+      placeholder="Masukan nama list"
+      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:outline-blue-500 block w-full p-2.5 pl-10 pr-[20px] py-2"
+    />
   </Modal>
 </template>
 
 <script>
 import { usePeojectStore } from "@/stores/project.store.js";
 import { useTodoStore } from "@/stores/todo.store.js";
+import { useTeamStore } from "@/stores/team.store.js";
 
 export default {
   props: ["id"], // Menerima id sebagai props
@@ -127,11 +154,18 @@ export default {
     return {
       projectStore: usePeojectStore(),
       todoStore: useTodoStore(),
+      teamStore: useTeamStore(),
       project: null,
       projectName: null,
-      isOpen: false,
+      openModal1: false,
+      openModal2: false,
       formData: {
         description: null,
+        email: null,
+        project_id: null,
+      },
+      formData2: {
+        email: null,
         project_id: null,
       },
     };
@@ -202,17 +236,33 @@ export default {
           description: this.formData.description,
         });
         this.formData.description = null;
-        this.isOpen = false;
-        await this.todoStore.fetch();
       } catch (error) {
         console.error("Gagal menambahkan project:", error);
       }
     },
 
+    async submitTeam() {
+      if (!this.formData.email) {
+        alert("email project tidak boleh kosong");
+        return;
+      }
+
+      this.formData.project_id = this.project.id;
+      try {
+        await this.teamStore.add({
+          project_id: this.formData.project_id,
+          email: this.formData.email,
+        });
+        this.formData.email = null;
+      } catch (error) {
+        console.error("Gagal menambahkan team:", error);
+      }
+    },
     showAlert() {
       this.$swal.fire({
-        confirmButtonText: "Keluar",
         cancelButtonText: "Batal",
+        confirmButtonText: "Keluar",
+        
         showCancelButton: true,
         buttonsStyling: false,
         // showCloseButton: true,
@@ -224,18 +274,19 @@ export default {
           </div>
         `,
         customClass: {
-          container: '!bg-[#000000B2] bg-opacity-80',
-          popup: "!flex flex-col p-[12px]",
-          icon: "bg-[#FB6056] h-full w-full rounded-2xl border-none py-16",
-          actions: "lex w-full justify-between space-x-3 p-3",
-          confirmButton: "flex-grow bg-[#007DFC] p-2 rounded-md text-white hover:bg-[#0071E3]",
-          cancelButton: 'flex-grow bg-white text-[#005bb5] border border-[#005bb5] p-2 rounded-md',
+          container: "!bg-[#000000B2] !p-[12px] bg-opacity-80 ",
+          popup: "!flex flex-col p-[12px] ",
+          icon: "bg-[#FB6056]  w-full rounded-2xl border-none py-16 mt-0",
+          actions: "flex w-full justify-between space-x-3 p-3",
+          confirmButton:
+            "flex-grow bg-[#FB6056] p-2 rounded-md text-white hover:bg-[#E4574E]",
+          cancelButton:
+            "flex-grow bg-white text-[#FB6056] border border-[#FB6056] p-2 rounded-md",
         },
 
         preConfirm: () => {
-          this.$router.push('/');
-        }
-
+          this.$router.push("/");
+        },
       });
     },
   },

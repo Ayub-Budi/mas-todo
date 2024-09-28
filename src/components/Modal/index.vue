@@ -4,9 +4,7 @@
       class="bg-[#000000B2] w-full h-full absolute inset-0 bg-opacity-80"
       @click.self="closeModal"
     >
-      <div
-        class="bg-gray-200 h-full absolute rounded-[24px] right-0 top-1/2 transform -translate-y-1/2 p-4"
-      >
+      <div class="bg-gray-200 h-full absolute rounded-[24px] right-0 top-1/2 transform -translate-y-1/2 p-4">
         <div class="flex justify-between">
           <h1>{{ title }}</h1>
           <button @click="closeModal">X</button>
@@ -26,7 +24,7 @@
   <script>
   export default {
     props: {
-      isOpen: {
+      modelValue: {
         type: Boolean,
         required: true
       },
@@ -39,12 +37,17 @@
         default: 'Submit'
       }
     },
+    computed: {
+      isOpen() {
+        return this.modelValue; // Menggunakan prop modelValue untuk menentukan apakah modal terbuka
+      }
+    },
     methods: {
       closeModal() {
-        this.$emit('close');
+        this.$emit('update:modelValue', false); // Emit event untuk menutup modal
       },
       handleSubmit() {
-        this.$emit('submit');
+        this.$emit('submit'); // Emit event untuk pengiriman data
       }
     }
   };

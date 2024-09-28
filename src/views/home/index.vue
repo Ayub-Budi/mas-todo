@@ -7,7 +7,7 @@
 
       <div>
         <!-- <ButtonPrimary @click="openSidebar">+ Buat project baru</ButtonPrimary> -->
-        <ButtonPrimary @click="setModal">+ Buat project baru</ButtonPrimary>
+        <ButtonPrimary @click="openModal">+ Buat project baru</ButtonPrimary>
       </div>
     </div>
 
@@ -32,9 +32,16 @@
                 :style="{ width: projectCompletionPercentage(project) + '%' }"
               ></div>
             </div>
-            <p class="text-sm mt-2 text-gray-700">
-              {{ completedTodos(project) }}/{{ totalTodos(project) }} Selesai
-            </p>
+
+            <div class="flex justify-between">
+              <div><p>{{ projectStatus(project) }}</p></div>
+              <div>
+                <p class="text-sm mt-2 text-gray-700">
+                  {{ completedTodos(project) }}/{{ totalTodos(project) }} Selesai
+                </p>
+              </div>
+            </div>
+            
           </div>
         </div>
         <span class="border-t-2 w-full"></span>
@@ -57,36 +64,39 @@
     </div>
 
     <!-- Pagination -->
-    <div class="flex justify-center mt-5">
-      <button
-        @click="prevPage"
-        :disabled="currentPage === 1"
-        class="px-3 py-1 mx-1 bg-gray-200 text-gray-700 rounded-[12px]"
-      >
-        Prev
-      </button>
-      <button
-        v-for="page in totalPages"
-        :key="page"
-        @click="currentPage = page"
-        :class="[
-          'px-3 py-1 mx-1',
-          currentPage === page
-            ? 'bg-blue-600 text-white'
-            : 'bg-gray-200 text-gray-700',
-        ]"
-        class="rounded-[12px]"
-      >
-        {{ page }}
-      </button>
+    <div class="flex justify-between mt-5">
+      <div><p>tess</p></div>
+      <div>
+        <button
+          @click="prevPage"
+          :disabled="currentPage === 1"
+          class="px-3 py-1 mx-1 bg-gray-200 text-gray-700 rounded-[12px]"
+        >
+          Prev
+        </button>
+        <button
+          v-for="page in totalPages"
+          :key="page"
+          @click="currentPage = page"
+          :class="[
+            'px-3 py-1 mx-1',
+            currentPage === page
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-200 text-gray-700',
+          ]"
+          class="rounded-[12px]"
+        >
+          {{ page }}
+        </button>
 
-      <button
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-        class="px-3 py-1 mx-1 bg-gray-200 text-gray-700 rounded-[12px]"
-      >
-        Next
-      </button>
+        <button
+          @click="nextPage"
+          :disabled="currentPage === totalPages"
+          class="px-3 py-1 mx-1 bg-gray-200 text-gray-700 rounded-[12px]"
+        >
+          Next
+        </button>
+      </div>
     </div>
   </div>
 
@@ -105,34 +115,8 @@
     </div>
   </div>
 
-  <!-- <div
-    class="bg-[#000000B2] w-full h-full absolute inset-0 bg-opacity-80"
-    :class="{ '': isOpen, hidden: !isOpen }"
-    @click.self="isOpen = false"
-  >
-    <div
-      class="bg-gray-200 h-full absolute rounded-[24px] right-0 top-1/2 transform -translate-y-1/2 p-4"
-    >
-      <div class="flex justify-between">
-        <div><h1>Tambah project baru</h1></div>
-        <div><button @click.self="isOpen = false">X</button></div>
-      </div>
 
-      <div class="py-2">
-        <label for="namaProject" class="block mb-2 text-sm font-medium text-gray-900">Nama nama project</label>
-        <input
-          type="text"
-          id="namaProject"
-          v-model="formData.name"
-          placeholder="Masukan nama project"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:outline-blue-500 block w-full p-2.5 pl-10 pr-[20px] py-2"
-        />
-      </div>
-      <ButtonPrimary class="w-full " @click="submitProject">Submit</ButtonPrimary>
-    </div>
-  </div> -->
-
-  <Modal :isOpen="isOpen" title="Tambah project baru" submitLabel="Submit" @close="setModal" @submit="submitProject" >
+  <Modal :modelValue="isModalOpen" @update:modelValue="isModalOpen = false" title="Tambah project baru" submitLabel="Submit" @submit="submitProject">
     <div class="py-2">
       <label for="namaProject" class="block mb-2 text-sm font-medium text-gray-900">Nama project</label>
         <input
@@ -162,6 +146,7 @@ export default {
       currentPage: 1,
       itemsPerPage: 6,
       isOpen: false,
+      isModalOpen: false,
     };
   },
 
@@ -189,6 +174,12 @@ export default {
       return project.todo.length;
     },
 
+    projectStatus(project) {
+      const total = this.totalTodos(project);
+      const completed = this.completedTodos(project);
+      return total === completed ? 'Selesai' : 'Belum Selesai';
+    },
+
     projectCompletionPercentage(project) {
       const total = this.totalTodos(project);
       const completed = this.completedTodos(project);
@@ -207,9 +198,11 @@ export default {
       }
     },
 
-    setModal() {
-      this.isOpen = !this.isOpen;
-      console.log(this.isOpen);
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
     },
 
     handleClick(event) {
@@ -226,12 +219,9 @@ export default {
         alert('Nama project tidak boleh kosong');
         return;
       }
-
       try {
         await this.projectStore.add(this.formData);
         this.formData.name = null;
-        this.isOpen = false;
-        await this.projectStore.fetch();
       } catch (error) {
         console.error("Gagal menambahkan project:", error);
       }

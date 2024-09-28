@@ -31,13 +31,12 @@ export const usePeojectStore = defineStore({
 
           async detail(id) {
             try {
-                let url = `${baseUrl}/project`; // URL untuk mengambil daftar proyek
+                let url = `${baseUrl}/project`;
                 const response = await axiosWrapper.get(url);
-        
-                // Memeriksa data yang diterima dari API
+    
                 console.log("Full response data:", response.data); 
         
-                // Jika respons berhasil dan data tersedia
+        
                 if (response && response.data) {
                     // Filter proyek berdasarkan ID yang diberikan
                     this.project = response.data.find(project => project.id === id);
