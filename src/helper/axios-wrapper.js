@@ -1,16 +1,21 @@
-import { useAuthStore } from '@/stores/auth.store.js';
-import axios from 'axios';
-import { toast } from 'vue3-toastify';
+import { useAuthStore } from "@/stores/auth.store.js";
+import axios from "axios";
+import { toast } from "vue3-toastify";
 
 export const axiosWrapper = {
-  get: request('GET'),
-  post: request('POST'),
-  put: request('PUT'),
-  delete: request('DELETE'),
+  get: request("GET"),
+  post: request("POST"),
+  put: request("PUT"),
+  delete: request("DELETE"),
 };
 
 function request(method) {
-  return (url, body, notification = false, contentType = 'application/json') => {
+  return (
+    url,
+    body,
+    notification = false,
+    contentType = "application/json"
+  ) => {
     const requestOptions = {
       url,
       method,
@@ -18,32 +23,33 @@ function request(method) {
     };
 
     if (body) {
-      if (contentType == 'application/json') {
-        requestOptions.headers['Content-Type'] = 'application/json';
+      if (contentType == "application/json") {
+        requestOptions.headers["Content-Type"] = "application/json";
         requestOptions.data = JSON.stringify(body);
       } else {
-        requestOptions.headers['Content-Type'] = contentType;
+        requestOptions.headers["Content-Type"] = contentType;
         requestOptions.data = body;
       }
     }
 
-    return axios(requestOptions)
-      .then((response) => {
-        if(notification){
+    return axios(requestOptions).then(
+      (response) => {
+        if (notification) {
           toast(response.data.message, {
             autoClose: 2000,
-            type: 'success',
+            type: "success",
             position: toast.POSITION.BOTTOM_RIGHT,
           });
         }
 
         response.data.status = response.status;
 
-        return response.data
-
-      }, (error) => {
+        return response.data;
+      },
+      (error) => {
         return errorHandler(error);
-      });
+      }
+    );
   };
 }
 
@@ -59,39 +65,36 @@ function authHeader(url) {
 }
 
 function errorHandler(error) {
-  let response  = error.response
-  let data = response.data
+  let response = error.response;
+  let data = response.data;
 
   const { user, logout } = useAuthStore();
 
-  let message = ''
+  let message = "";
 
   if ([401, 403].includes(response.status) && user) {
     logout();
-  }else if ([422].includes(response.status)) {
+  } else if ([422].includes(response.status)) {
     data.errors.forEach((element, index) => {
-      if(index < data.errors.length - 1){
-        message += element.message + ', '
-      }else{
-        message += element.message
+      if (index < data.errors.length - 1) {
+        message += element.message + ", ";
+      } else {
+        message += element.message;
       }
     });
-  }else{
-    if(data.message){
-      message = data.message
-    }else{
-      message = error.message
+  } else {
+    if (data.message) {
+      message = data.message;
+    } else {
+      message = error.message;
     }
   }
 
   toast(message, {
     autoClose: 2000,
-    type: 'error',
+    type: "error",
     position: toast.POSITION.BOTTOM_RIGHT,
   });
 
   return false;
 }
-
-
-

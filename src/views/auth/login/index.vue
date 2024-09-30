@@ -107,6 +107,8 @@ export default {
   methods: {
     login() {
       this.authStore.login(this.formData);
+      console.log(this.formData);
+      
     },
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword;

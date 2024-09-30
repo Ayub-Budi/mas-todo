@@ -137,7 +137,7 @@
     />
   </Modal>
 
-  <Modal v-model="openModal3" title="Modal 3" @submit="edit(todo)">
+  <Modal v-model="openModal3" title="Update project" @submit="edit(todo)">
     <label for="editTodo" class="block mb-2 text-sm font-medium text-gray-900"
       >Nama nama project</label
     >
