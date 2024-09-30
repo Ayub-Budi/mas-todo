@@ -33,7 +33,17 @@
             </div>
 
             <div class="flex justify-between">
-              <div><p>{{ projectStatus(project) }}</p></div>
+              <div><p :class="{
+                      'text-[#06BD80]': projectStatus(project) === 'Selesai',
+                      'text-[#D8852D]': projectStatus(project) === 'Belum Selesai'
+                    }"> 
+                      <span
+                        :class="{
+                          'bg-[#06BD80]': projectStatus(project) === 'Selesai',
+                          'bg-[#D8852D]': projectStatus(project) === 'Belum Selesai'
+                        }"
+                        class="inline-block w-2 h-2 rounded-full mr-2"
+                      ></span> {{ projectStatus(project) }}</p></div>
               <div>
                 <p class="text-sm mt-2 text-gray-700">
                   {{ completedTodos(project) }}/{{ totalTodos(project) }} Selesai
