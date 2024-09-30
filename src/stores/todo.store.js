@@ -21,5 +21,10 @@ export const useTodoStore = defineStore({
     async update(id, data) {
       return await axiosWrapper.put(`${baseUrl}/todo/${id}`, data, true);
     },
+
+    async delete(id) {
+      return await axiosWrapper.delete(`${baseUrl}/todo/${id}`, {}, true);
+    },
   },
+
 });

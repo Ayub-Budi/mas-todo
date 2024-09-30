@@ -1,59 +1,54 @@
 <template>
-    <div
-      v-if="isOpen"
-      class="bg-[#000000B2] w-full h-full absolute inset-0 bg-opacity-80"
-      @click.self="closeModal"
-    >
-      <div class="bg-gray-200 h-full absolute rounded-[24px] right-0 top-1/2 transform -translate-y-1/2 p-4">
-        <div class="flex justify-between">
-          <h1>{{ title }}</h1>
-          <button @click="closeModal">X</button>
-        </div>
-  
-        <div class="py-2">
-          <!-- The default slot where the input form will go -->
-          <slot></slot>
-        </div>
-  
-        <!-- Submit button -->
-        <ButtonPrimary class="w-full" @click="handleSubmit">{{ submitLabel }}</ButtonPrimary>
+  <div
+    v-if="isOpen"
+    class="bg-[#000000B2] w-full h-full fixed inset-0 bg-opacity-80 p-[12px] flex justify-end items-start"
+    @click.self="closeModal"
+  >
+    <div class="bg-[#F9FBFE] h-full p-[12px] rounded-[24px]">
+      <div class="flex justify-between">
+        <h1>{{ title }}</h1>
+        <button @click="closeModal">X</button>
       </div>
+
+      <div class="py-2">
+        <!-- Slot untuk form input -->
+        <slot></slot>
+      </div>
+
+      <!-- Tombol submit -->
+      <ButtonPrimary class="w-full" @click="handleSubmit">{{ submitLabel }}</ButtonPrimary>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    props: {
-      modelValue: {
-        type: Boolean,
-        required: true
-      },
-      title: {
-        type: String,
-        default: 'Modal Title'
-      },
-      submitLabel: {
-        type: String,
-        default: 'Submit'
-      }
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    modelValue: {
+      type: Boolean,
+      required: true
     },
-    computed: {
-      isOpen() {
-        return this.modelValue; // Menggunakan prop modelValue untuk menentukan apakah modal terbuka
-      }
+    title: {
+      type: String,
+      default: 'Modal Title'
     },
-    methods: {
-      closeModal() {
-        this.$emit('update:modelValue', false); // Emit event untuk menutup modal
-      },
-      handleSubmit() {
-        this.$emit('submit'); // Emit event untuk pengiriman data
-      }
+    submitLabel: {
+      type: String,
+      default: 'Submit'
     }
-  };
-  </script>
-  
-  <style scoped>
-  /* Add any additional styles for the modal here if needed */
-  </style>
-  
+  },
+  computed: {
+    isOpen() {
+      return this.modelValue;
+    }
+  },
+  methods: {
+    closeModal() {
+      this.$emit('update:modelValue', false);
+    },
+    handleSubmit() {
+      this.$emit('submit');
+    }
+  }
+};
+</script>

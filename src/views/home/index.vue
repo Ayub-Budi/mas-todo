@@ -51,7 +51,12 @@
             class="mt-2"
           >
             <label>
-              <input type="checkbox" v-model="todo.is_complete" class="mr-2" />
+              <input
+                type="checkbox"
+                :checked="todo.is_complete"
+                @change="toggleComplete(todo)"
+                class="mr-2 w-4 h-4"
+              />
               {{ todo.description }}
             </label>
           </div>
@@ -64,7 +69,7 @@
 
     <!-- Pagination -->
     <div class="flex justify-between mt-5">
-      <div><p>tess</p></div>
+      <div><p>Menampilkan {{ startItem }} sampai {{ endItem }} dari {{ totalProjects }} keseluruhan</p></div>
       <div>
         <button
           @click="prevPage"
@@ -131,14 +136,15 @@
 
 <script>
 import { useCounterStore } from "@/stores/counter.store.js";
-
 import { usePeojectStore } from "@/stores/project.store.js";
+import { useTodoStore } from "@/stores/todo.store.js";
 
 export default {
   data() {
     return {
       counterStore: useCounterStore(),
       projectStore: usePeojectStore(),
+      todoStore: useTodoStore(),
       formData: {
         name: null,
       },
@@ -160,6 +166,9 @@ export default {
       }
       return this.projectStore.projects;
     },
+    teams() {
+      return this.teamStore.teams;
+    },
 
     totalPages() {
       return Math.ceil(this.projects.length / this.itemsPerPage);
@@ -169,6 +178,18 @@ export default {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
       return this.projects.slice(start, end);
+    },
+
+    totalProjects() {
+      return this.projects.length;
+    },
+
+    startItem() {
+      return (this.currentPage - 1) * this.itemsPerPage + 1;
+    },
+
+    endItem() {
+      return Math.min(this.currentPage * this.itemsPerPage, this.totalProjects);
     },
   },
   methods: {
@@ -218,6 +239,18 @@ export default {
         !event.target.closest("ButtonPrimary")
       ) {
         this.closeSidebar();
+      }
+    },
+    async toggleComplete(todo) {
+      try {
+        const updatedStatus = !todo.is_complete;
+        await this.todoStore.update(todo.id, {
+          description: todo.description,
+          is_complete: updatedStatus,
+        });
+        todo.is_complete = updatedStatus;
+      } catch (error) {
+        console.error("Failed to update todo:", error);
       }
     },
     async submitProject() {
