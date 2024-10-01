@@ -1,31 +1,54 @@
 <template>
-    <div>
-      <input type="checkbox" :id="bookId" v-model="isChecked" class="w-4 h-4"/>
-      <label :for="bookId" class="text-[#303030]">{{ title }}</label>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    props: {
-      bookId: {
-        type: String,
-        required: true,
-      },
-      title: {
-        type: String,
-        required: true,
-      },
+  <div>
+    <input
+      :class="customChackBox"
+      type="checkbox"
+      :id="bookId"
+      v-model="isChecked"
+    />
+    <label :for="bookId" class="text-[#303030]">{{ title }}</label>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    bookId: {
+      type: String,
+      required: true,
     },
-    data() {
-      return {
-        isChecked: false
-      }
-    }
-  }
-  </script>
-  
-  <style scoped>
-  /* Tambahkan gaya sesuaikan jika diperlukan */
-  </style>
-  
+    title: {
+      type: String,
+      required: true,
+    },
+    checked: {
+      type: Boolean,
+      default: false,
+    },
+    intent: {
+      type: String,
+      default: "primary",
+    },
+  },
+  computed: {
+    customChackBox() {
+      const baseClass = "accent-[#007DFC]";
+      const variantClass = {
+        primary: "mr-2 w-[18px] h-[18px]",
+      };
+      return `${baseClass} ${variantClass[this.intent]}`;
+    },
+  },
+  data() {
+    return {
+      isChecked: this.checked, 
+    };
+  },
+  watch: {
+    checked(newValue) {
+      this.isChecked = newValue;
+    },
+  },
+};
+</script>
+

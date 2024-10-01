@@ -1,6 +1,6 @@
 <template>
-    <nav class="p-[24px]">
-        <div class="h-[75px] shadow shadow-[#63636333] rounded-[24px] flex justify-between items-center px-4">
+    <nav class="p-[21px]">
+        <div class="h-[75px] shadow shadow-[#63636333] rounded-[24px] flex justify-between items-center px-4 py-[12px] px-[32px]">
             <div class="flex items-center">
                 <img src="@/assets/logo1.svg" alt="Logo">
             </div>

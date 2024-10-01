@@ -36,19 +36,20 @@
       </div>
       
       <!-- todo -->
-      <div v-if="activeTab === 'todo'">
+      <div v-if="activeTab === 'todo'" class="border rounded-[10px]">
         <div
           v-for="todo in project.todo"
           :key="todo.id"
-          class="flex-1 flex flex-row flex items-center border sp ace-x-4 px-[18px] py-[20px]"
+          class="flex-1 flex flex-row flex items-center sp ace-x-4 px-[18px] py-[20px] border-t-2"
         >
           <div class="flex-1">
             <!-- <label>
               <input type="checkbox" v-model="todo.is_complete" class="mr-2" />
               {{ todo.description }}
             </label> -->
-            <label>
-              <!-- The @change event triggers the method to update is_complete -->
+            <CheckBook :title="todo.description" :checked="todo.is_complete" @change="toggleComplete(todo)" ></CheckBook>
+
+            <!-- <label>
               <input
                 type="checkbox"
                 :checked="todo.is_complete"
@@ -56,7 +57,7 @@
                 class="mr-2"
               />
               <span class="text-[#303030] text-[14px] font-bold">{{ todo.description }}</span>
-            </label>
+            </label> -->
           </div>
           <div class="flex-1 gap-[8px]">
             <p class="text-[#6E6E6E] text-[14px] font-medium">Created by <span class="text-[#303030] text-[14px] font-bold">{{ todo.created_by }}</span></p>

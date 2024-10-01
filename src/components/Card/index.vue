@@ -37,15 +37,16 @@
     <span class="border-t-2 w-full"></span>
     <div class="flex-1 px-4">
       <div v-for="todo in project.todo.slice(0, 3)" :key="todo.id" class="mt-2">
-        <input
+        <CheckBook :title="todo.description" :checked="todo.is_complete" @change="toggleComplete(todo)"></CheckBook>
+        <!-- <input
           type="checkbox"
           :checked="todo.is_complete"
           @change="toggleComplete(todo)"
-          class="mr-2 w-4 h-4"
+          class="mr-2 w-4 h-4 accent-[#007DFC]"
         />
         <label class="text-[14px] text-[#303030] font-medium">
           {{ todo.description }}
-        </label>
+        </label> -->
       </div>
     </div>
     <div class="shrink-0 flex px-4">
