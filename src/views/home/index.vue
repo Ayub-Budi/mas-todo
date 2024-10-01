@@ -2,11 +2,11 @@
   <div v-if="projects.length > 0">
     <div class="flex justify-between">
       <div>
-        <h1>Project</h1>
+        <h2 class="text-[24px] font-bold">Project</h2>
       </div>
 
       <div>
-        <ButtonPrimary @click="openModal">+ Buat project baru</ButtonPrimary>
+        <ButtonPrimary @click="openModal" :intent="'primary2'">+ Buat project baru</ButtonPrimary>
       </div>
     </div>
 
@@ -16,70 +16,14 @@
     </div>
 
     <div class="grid grid-cols-3 gap-4 mt-5">
-      <div
-        v-for="project in paginatedProjects"
-        :key="project.id"
-        class="border flex flex-warp flex-col rounded-[24px] py-6 gap-4"
-      >
-        <div class="flex-1 px-4">
-          <h1>{{ project.name }}</h1>
 
-          <div class="mt-4">
-            <div class="w-full h-4 bg-gray-200 rounded-full">
-              <div
-                class="h-4 bg-blue-600 rounded-full"
-                :style="{ width: projectCompletionPercentage(project) + '%' }"
-              ></div>
-            </div>
-
-            <div class="flex justify-between">
-              <div><p :class="{
-                      'text-[#06BD80]': projectStatus(project) === 'Selesai',
-                      'text-[#D8852D]': projectStatus(project) === 'Belum Selesai'
-                    }"> 
-                      <span
-                        :class="{
-                          'bg-[#06BD80]': projectStatus(project) === 'Selesai',
-                          'bg-[#D8852D]': projectStatus(project) === 'Belum Selesai'
-                        }"
-                        class="inline-block w-2 h-2 rounded-full mr-2"
-                      ></span> {{ projectStatus(project) }}</p></div>
-              <div>
-                <p class="text-sm mt-2 text-gray-700">
-                  {{ completedTodos(project) }}/{{ totalTodos(project) }} Selesai
-                </p>
-              </div>
-            </div>
-            
-          </div>
-        </div>
-        <span class="border-t-2 w-full"></span>
-        <div class="flex-1 px-4">
-          <div
-            v-for="todo in project.todo.slice(0, 3)"
-            :key="todo.id"
-            class="mt-2"
-          >
-            <label>
-              <input
-                type="checkbox"
-                :checked="todo.is_complete"
-                @change="toggleComplete(todo)"
-                class="mr-2 w-4 h-4"
-              />
-              {{ todo.description }}
-            </label>
-          </div>
-        </div>
-        <div class="shrink-0 flex px-4">
-          <ButtonPrimary class="flex-1" @click="$router.push({ name: 'ProjectDetail', params: { id: project.id } })">Lihat semua</ButtonPrimary>
-        </div>
-      </div>
+      <Card v-for="project in paginatedProjects" :key="project.id" :project="project" v-on:todoValue="toggleComplete"></Card>
+      
     </div>
-
+    
     <!-- Pagination -->
     <div class="flex justify-between mt-5">
-      <div><p>Menampilkan {{ startItem }} sampai {{ endItem }} dari {{ totalProjects }} keseluruhan</p></div>
+      <div><p class="text-[14px] text-[#303030] font-medium">Menampilkan {{ startItem }} sampai {{ endItem }} dari {{ totalProjects }} keseluruhan</p></div>
       <div>
         <button
           @click="prevPage"
@@ -122,7 +66,7 @@
         <p class="text-[16px] text-[#6E6E6E]">
           Saat ini anda belum menambahkan project, buat project terlebih dahulu
         </p>
-        <ButtonPrimary @click="setModal">Buat project</ButtonPrimary>
+        <ButtonPrimary class="mt-[10px]" :intent="'primary2'" @click="openModal">Buat project</ButtonPrimary>
         <!-- <ButtonPrimary @click="setModal">+ Buat project baru</ButtonPrimary> -->
 
       </div>
@@ -133,13 +77,7 @@
   <Modal :modelValue="isModalOpen" @update:modelValue="isModalOpen = false" title="Tambah project baru" submitLabel="Submit" @submit="submitProject">
     <div class="py-2">
       <label for="namaProject" class="block mb-2 text-sm font-medium text-gray-900">Nama project</label>
-        <input
-          type="text"
-          id="namaProject"
-          v-model="formData.name"
-          placeholder="Masukan nama project"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:outline-blue-500 block w-full p-2.5 pl-10 pr-[20px] py-2"
-        />
+      <InputPrimary v-model="formData.name" type="text" id="namaProject" placeholder="Masukan nama project..." required></InputPrimary>
     </div>
   </Modal>
 </template>
@@ -168,14 +106,15 @@ export default {
 
   computed: {
     projects() {
-      // Filter projects based on the filterStatus value
-      if (this.filterStatus === 'completed') {
-        return this.projectStore.projects.filter(project =>
-          this.totalTodos(project) === this.completedTodos(project)
-        );
-      }
+    if (this.filterStatus === 'completed') {
+      return this.projectStore.projects.filter(project =>
+        this.totalTodos(project) === this.completedTodos(project)
+      );
+    } else if (this.filterStatus === 'all') {
       return this.projectStore.projects;
-    },
+    }
+    return [];
+  },
     teams() {
       return this.teamStore.teams;
     },
@@ -203,26 +142,12 @@ export default {
     },
   },
   methods: {
-    completedTodos(project) {
-      return project.todo.filter((todo) => todo.is_complete).length;
-    },
-
     totalTodos(project) {
       return project.todo.length;
     },
-
-    projectStatus(project) {
-      const total = this.totalTodos(project);
-      const completed = this.completedTodos(project);
-      return total === completed ? 'Selesai' : 'Belum Selesai';
+    completedTodos(project) {
+        return project.todo.filter(todo => todo.is_complete).length;
     },
-
-    projectCompletionPercentage(project) {
-      const total = this.totalTodos(project);
-      const completed = this.completedTodos(project);
-      return total > 0 ? Math.round((completed / total) * 100) : 0;
-    },
-
     prevPage() {
       if (this.currentPage > 1) {
         this.currentPage--;
@@ -252,6 +177,7 @@ export default {
       }
     },
     async toggleComplete(todo) {
+      console.log('home', todo)
       try {
         const updatedStatus = !todo.is_complete;
         await this.todoStore.update(todo.id, {
@@ -271,6 +197,7 @@ export default {
       try {
         await this.projectStore.add(this.formData);
         this.formData.name = null;
+        this.projectStore.fetch();
       } catch (error) {
         console.error("Gagal menambahkan project:", error);
       }

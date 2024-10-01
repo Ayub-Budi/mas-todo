@@ -1,6 +1,9 @@
 <template>
-  <button class="bg-[#007DFC] p-2 rounded-md text-white hover:bg-[#0071E3]" :type="type">
-    <slot/>
+  <button
+    :class="customButton"
+    :type="type"
+  >
+    <slot />
   </button>
 </template>
 
@@ -9,8 +12,25 @@ export default {
   props: {
     type: {
       type: String,
-      default: 'button',
+      default: "button",
     },
-  }
-}
+    intent: {
+      type: String,
+      default: "primary",
+    },
+  },
+  computed: {
+    customButton() {
+      const baseClass = "bg-[#007DFC] text-white hover:bg-[#0071E3]";
+      const variantClass = {
+        primary: "rounded-[16px] py-[16px] px-[20px]",
+        primary2: "rounded-[14px] py-[14px] px-[32px] gap-[6px]",
+        primary3: "rounded-[14px] py-[12px] px-[16px] gap-[6px]",
+        primary4: "rounded-[14px] py-[14px] px-[32px] gap-[6px] !bg-[#E4574E] !hover:bg-[#B2443D]",
+
+      };
+      return `${baseClass} ${variantClass[this.intent]}`;
+    },
+  },
+};
 </script>

@@ -2,26 +2,29 @@
   <div v-if="project">
     <div class="flex justify-between">
       <div>
-        <h1>{{ project.name }}</h1>
+        <h1 class="text-[24px] text-[#303030] font-bold">{{ project.name }}</h1>
       </div>
       <div class="flex gap-[10px]">
         <div>
-          <ButtonPrimary @click="openModal1 = true"
-            >+ Buat project baru</ButtonPrimary
+          <ButtonPrimary :intent="'primary2'" @click="openModal1 = true"
+            >+ + Tambah to-do</ButtonPrimary
           >
         </div>
         <div>
-          <ButtonPrimary @click="openModal2 = true"
+          <ButtonPrimary :intent="'primary2'" @click="openModal2 = true"
             >+ Undang personil</ButtonPrimary
           >
         </div>
         <div>
-          <button
+          <ButtonPrimary :intent="'primary4'" @click="showAlert"
+            >Keluar project</ButtonPrimary>
+          
+          <!-- <button
             @click="showAlert"
             class="bg-[#E4574E] p-2 rounded-md text-white hover:bg-[#B2443D]"
           >
             Keluar project
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
@@ -37,7 +40,7 @@
         <div
           v-for="todo in project.todo"
           :key="todo.id"
-          class="flex-1 flex flex-row sp ace-x-4 px-[18px] py-[20px]"
+          class="flex-1 flex flex-row flex items-center border sp ace-x-4 px-[18px] py-[20px]"
         >
           <div class="flex-1">
             <!-- <label>
@@ -52,21 +55,21 @@
                 @change="toggleComplete(todo)"
                 class="mr-2"
               />
-              <strong>{{ todo.description }}</strong>
+              <span class="text-[#303030] text-[14px] font-bold">{{ todo.description }}</span>
             </label>
           </div>
           <div class="flex-1 gap-[8px]">
-            <span class="text-[#6E6E6E]">Created by</span> <strong>{{ todo.created_by }}</strong>
+            <p class="text-[#6E6E6E] text-[14px] font-medium">Created by <span class="text-[#303030] text-[14px] font-bold">{{ todo.created_by }}</span></p>
           </div>
           <div class="flex-1 gap-[8px]">
-            <span class="text-[#6E6E6E]">Created at</span> <strong>{{ formatDate(todo.created_at) }}</strong>
+            <p class="text-[#6E6E6E] text-[14px] font-medium">Created at <span class="text-[#303030] text-[14px] font-bold">{{ formatDate(todo.created_at) }}</span></p>
           </div>
           <div class="flex-1 gap-[8px]">
-            <span class="text-[#6E6E6E]">Updated at</span> <strong>{{ formatDate(todo.updated_at) }} </strong>
+            <p class="text-[#6E6E6E] text-[14px] font-medium">Updated at <span class="text-[#303030] text-[14px] font-bold">{{ formatDate(todo.updated_at) }}</span></p>
           </div>
           <div class="flex-2 gap-[8px]">
             <div class="">
-              <button @click="openEditModal(todo)" class="bg-[#CCE5FE] rounded-[5px] p-[8px] mr-[4px]"><i class="ri-edit-box-line text-[#007DFC]"></i></button>
+              <button @click="openEditModal(todo)" class="bg-[#CCE5FE] rounded-[5px] p-[8px] mr-[4px] gap-[10px]"><i class="ri-edit-box-line text-[#007DFC]"></i></button>
               <button @click="deleteTodo(todo)" class="bg-[#FEDFDD] rounded-[5px] p-[8px]"><i class="ri-delete-bin-line text-[#FB6056]"></i></button>
             </div>
           </div>
@@ -81,18 +84,25 @@
     <div v-if="activeTab === 'personil'">
       <div class=" flex flex-row bg-[#F0F3FF] rounded-tl-[10px] rounded-tr-[10px] border">
         <div class="py-[18px] px-[20px]">#</div>
-        <div class="flex-1 py-[18px] px-[20px]">Nama Personil</div>
-        <div class="flex-1 py-[18px] px-[20px]">Email</div>
-        <div class="flex-1 py-[18px] px-[20px]">No Telepon</div>
+        <div class="flex-1 text-[14px] text-[#303030] font-bold py-[18px] px-[20px]">Nama Personil</div>
+        <div class="flex-1 text-[14px] text-[#303030] font-bold py-[18px] py-[18px] px-[20px]">Email</div>
+        <div class="flex-1 text-[14px] text-[#303030] font-bold py-[18px] py-[18px] px-[20px]">No Telepon</div>
       </div>
-      <div v-if="teamStore.teams && teamStore.teams.length > 0"> <!-- Tambahkan pengecekan ini -->
-        <div v-for="member in teamStore.teams" :key="member.id" class=" flex flex-row pt-[6px] pb-[6px] border-r border-b border-l">
-          <div class="py-[18px] px-[20px]">#</div>
-          <div class="flex-1 py-[18px] px-[20px]"><strong>{{ member.name }}</strong></div>
-          <div class="flex-1 py-[18px] px-[20px]"><span> {{ member.email }}</span> </div>
-          <div class="flex-1 py-[18px] px-[20px]"><span>{{ member.phone_number }}</span></div>
+      <div v-if="teamStore.teams && teamStore.teams.length > 0">
+          <div v-for="(member, index) in teamStore.teams" :key="member.id" class="flex flex-row pt-[6px] pb-[6px] border-r border-b border-l">
+            <div class="text-[14px] text-[#6E6E6E] font-medium py-[18px] px-[20px]">{{ index + 1 }}</div>
+            <div class="flex-1 text-[14px] text-[#303030] font-bold py-[18px] px-[20px]">
+              <strong>{{ member.name }}</strong>
+            </div>
+            <div class="flex-1 text-[14px] text-[#6E6E6E] font-medium py-[18px] px-[20px]">
+              <span>{{ member.email }}</span>
+            </div>
+            <div class="flex-1 text-[14px] text-[#6E6E6E] font-medium py-[18px] px-[20px]">
+              <span>{{ member.phone_number }}</span>
+            </div>
+          </div>
         </div>
-      </div>
+
       <div v-else>
         <p>Tidak ada anggota tim untuk ditampilkan.</p>
       </div>
@@ -114,13 +124,7 @@
       <label for="namalist" class="block mb-2 text-sm font-medium text-gray-900"
         >Nama list</label
       >
-      <input
-        type="text"
-        id="namalist"
-        v-model="formData.description"
-        placeholder="Masukan nama list"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:outline-blue-500 block w-full p-2.5 pl-10 pr-[20px] py-2"
-      />
+      <InputPrimary v-model="formData.description" type="text" id="namalist" placeholder="Masukan nama list" required></InputPrimary>
     </div>
   </Modal>
 
@@ -128,26 +132,15 @@
     <label for="team" class="block mb-2 text-sm font-medium text-gray-900"
       >Email</label
     >
-    <input
-      type="text"
-      id="team"
-      v-model="formData.email"
-      placeholder="Masukan nama list"
-      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:outline-blue-500 block w-full p-2.5 pl-10 pr-[20px] py-2"
-    />
+    <InputPrimary v-model="formData.email" type="text" id="team" placeholder="Masukan wmail" required></InputPrimary>
   </Modal>
 
   <Modal v-model="openModal3" title="Update project" @submit="edit(todo)">
     <label for="editTodo" class="block mb-2 text-sm font-medium text-gray-900"
       >Nama nama project</label
     >
-    <input
-      type="text"
-      id="editTodo"
-      v-model="formData.description"
-      placeholder="Masukan nama list"
-      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:outline-blue-500 block w-full p-2.5 pl-10 pr-[20px] py-2"
-    />
+    <InputPrimary v-model="formData.description" type="text" id="editTodo" placeholder="Masukan nama list" required></InputPrimary>
+
   </Modal>
 </template>
 

@@ -10,8 +10,8 @@
       />
 
       <div class="pt-[24px] pb-[24px]">
-        <h3 class="text-[28px] font-bold">Masuk</h3>
-        <p class="text-[14px]">
+        <h1 class="text-[28px] font-semibold">Masuk</h1>
+        <p class="text-[14px] font-regular">
           Masukan informasi login anda untuk mengakses aplikasi
         </p>
       </div>
@@ -24,16 +24,9 @@
             >Email</label
           >
           <div class="relative group">
-            <input
-              v-model="formData.email"
-              type="email"
-              id="email"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:outline-blue-500 block w-full p-2.5 pl-10 pr-4 py-2"
-              placeholder="john.doe@company.com"
-              required
-            />
+            <InputPrimary v-model="formData.email" type="email" id="email" placeholder="Masukkan email..." required></InputPrimary>
             <div
-              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              class="absolute inset-y-0 left-0 pl-[20px] flex items-center pointer-events-none"
             >
               <i
                 class="ri-mail-line text-gray-400 group-focus-within:text-blue-500"
@@ -49,16 +42,9 @@
             >Password</label
           >
           <div class="relative group">
-            <input
-              v-model="formData.password"
-              :type="showPassword ? 'text' : 'password'"
-              id="password"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:outline-blue-500 block w-full p-2.5 pl-10 pr-10 py-2"
-              placeholder="•••••••••"
-              required
-            />
+            <InputPrimary v-model="formData.password" :type="showPassword ? 'text' : 'password'" id="password" placeholder="Masukan password..." required></InputPrimary>
             <div
-              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              class="absolute inset-y-0 left-0 pl-[20px] flex items-center pointer-events-none"
             >
               <i
                 class="ri-lock-line text-gray-400 group-focus-within:text-blue-500"
@@ -74,11 +60,11 @@
           </div>
         </div>
 
-        <ButtonPrimary class="w-full" :type="'submit'">Login</ButtonPrimary>
+        <ButtonPrimary class="w-full" :type="'submit'" :intent="'primary'">Login</ButtonPrimary>
 
         <div class="relative flex py-5 items-center">
           <div class="flex-grow border-t border-gray-400"></div>
-          <span class="flex-shrink mx-4">Belum punya akun?</span>
+          <span class="flex-shrink mx-4 text-[14px]">Belum punya akun?</span>
           <div class="flex-grow border-t border-gray-400"></div>
         </div>
 

@@ -1,6 +1,6 @@
 <template>
   <button
-    class="bg-white text-[#005bb5] border border-[#005bb5] p-2 rounded-md"
+    :class="customButton"
     :type="type"
   >
     <slot />
@@ -14,6 +14,19 @@ export default {
       type: String,
       default: "button",
     },
+    intent: {
+      type: String,
+      default: "primary"
+    }
   },
+  computed: {
+    customButton() {
+      const baseClass = "bg-white text-[#005bb5] border border-[#005bb5]";
+      const variantClass = {
+        primary: "rounded-[16px] py-[16px] px-[20px]",
+      }
+      return `${baseClass} ${variantClass[this.intent]}`
+    }
+  }
 };
 </script>
