@@ -329,7 +329,8 @@ export default {
         reverseButtons: true,
         // showCloseButton: true,
         title: `Keluar dari Project ${this.project.name}?`,
-        text: "Apa anda yakin ingin keluar dari project ini?",
+        html: `<p class=" text-[14px] !text-left">Apa anda yakin ingin keluar dari project ini?<p>`,
+        // text: "Apa anda yakin ingin keluar dari project ini?",
         iconHtml: `
           <div class="border border-white rounded-full p-4 flex items-center justify-center">
               <i class="ri-logout-box-r-line text-white "></i>
@@ -339,6 +340,9 @@ export default {
           container: "!bg-[#000000B2] !p-[12px] bg-opacity-80 ",
           popup: "!flex flex-col p-[12px] ",
           icon: "bg-[#FB6056]  w-full rounded-2xl border-none py-16 mt-0",
+          title: "p-0 text-left text-[21px]",
+          htmlContainer: 'text-left text-sm !m-0 p-0 ',
+          text: "m-0",
           actions: "flex w-full justify-between space-x-3 p-3",
           confirmButton:
             "flex-grow bg-[#FB6056] p-2 rounded-md text-white hover:bg-[#E4574E]",
