@@ -77,7 +77,7 @@
   <Modal :modelValue="isModalOpen" @update:modelValue="isModalOpen = false" title="Tambah project baru" submitLabel="Submit" @submit="submitProject">
     <div class="py-2">
       <label for="namaProject" class="block mb-2 text-sm font-medium text-gray-900">Nama project</label>
-      <InputPrimary v-model="formData.name" type="text" id="namaProject" placeholder="Masukan nama project..." required></InputPrimary>
+      <InputPrimary v-model="formData.name" type="text" id="namaProject" placeholder="Masukan nama project..." :intent="'primary2'" required></InputPrimary>
     </div>
   </Modal>
 </template>

@@ -6,107 +6,33 @@
       </div>
       <div class="flex gap-[10px]">
         <div>
-          <ButtonPrimary :intent="'primary2'" @click="openModal1 = true"
-            >+ + Tambah to-do</ButtonPrimary
-          >
+          <ButtonPrimary :intent="'primary2'" @click="openModal1 = true">+ + Tambah to-do</ButtonPrimary>
         </div>
         <div>
-          <ButtonPrimary :intent="'primary2'" @click="openModal2 = true"
-            >+ Undang personil</ButtonPrimary
-          >
+          <ButtonPrimary :intent="'primary2'" @click="openModal2 = true">+ Undang personil</ButtonPrimary>
         </div>
         <div>
-          <ButtonPrimary :intent="'primary4'" @click="showAlert"
-            >Keluar project</ButtonPrimary>
-          
-          <!-- <button
-            @click="showAlert"
-            class="bg-[#E4574E] p-2 rounded-md text-white hover:bg-[#B2443D]"
-          >
-            Keluar project
-          </button> -->
+          <ButtonPrimary :intent="'primary4'" @click="showAlert">Keluar project</ButtonPrimary>
         </div>
       </div>
     </div>
 
     <div class="flex flex-col" v-if="project.todo && project.todo.length > 0">
-      <div>
+      <div class="py-[16px]">
         <ButtonMinimal @click="activeTab = 'todo'">To-do list</ButtonMinimal>
         <ButtonMinimal @click="activeTab = 'personil'">Personil</ButtonMinimal>
       </div>
       
       <!-- todo -->
       <div v-if="activeTab === 'todo'" class="border rounded-[10px]">
-        <div
-          v-for="todo in project.todo"
-          :key="todo.id"
-          class="flex-1 flex flex-row flex items-center sp ace-x-4 px-[18px] py-[20px] border-t-2"
-        >
-          <div class="flex-1">
-            <!-- <label>
-              <input type="checkbox" v-model="todo.is_complete" class="mr-2" />
-              {{ todo.description }}
-            </label> -->
-            <CheckBook :title="todo.description" :checked="todo.is_complete" @change="toggleComplete(todo)" ></CheckBook>
-
-            <!-- <label>
-              <input
-                type="checkbox"
-                :checked="todo.is_complete"
-                @change="toggleComplete(todo)"
-                class="mr-2"
-              />
-              <span class="text-[#303030] text-[14px] font-bold">{{ todo.description }}</span>
-            </label> -->
-          </div>
-          <div class="flex-1 gap-[8px]">
-            <p class="text-[#6E6E6E] text-[14px] font-medium">Created by <span class="text-[#303030] text-[14px] font-bold">{{ todo.created_by }}</span></p>
-          </div>
-          <div class="flex-1 gap-[8px]">
-            <p class="text-[#6E6E6E] text-[14px] font-medium">Created at <span class="text-[#303030] text-[14px] font-bold">{{ formatDate(todo.created_at) }}</span></p>
-          </div>
-          <div class="flex-1 gap-[8px]">
-            <p class="text-[#6E6E6E] text-[14px] font-medium">Updated at <span class="text-[#303030] text-[14px] font-bold">{{ formatDate(todo.updated_at) }}</span></p>
-          </div>
-          <div class="flex-2 gap-[8px]">
-            <div class="">
-              <button @click="openEditModal(todo)" class="bg-[#CCE5FE] rounded-[5px] p-[8px] mr-[4px] gap-[10px]"><i class="ri-edit-box-line text-[#007DFC]"></i></button>
-              <button @click="deleteTodo(todo)" class="bg-[#FEDFDD] rounded-[5px] p-[8px]"><i class="ri-delete-bin-line text-[#FB6056]"></i></button>
-            </div>
-          </div>
-        </div>
+        <CardDetailTodo v-for="todo in project.todo" :key="todo.id" :todo="todo" v-on:todoValue="toggleComplete" v-on:openModal="openEditModal" v-on:deletetodo="deleteTodo"></CardDetailTodo>
       </div>
     </div>
     <div v-else>
       <p>Tidak ada tugas untuk ditampilkan.</p>
     </div>
-    
-    
     <div v-if="activeTab === 'personil'">
-      <div class=" flex flex-row bg-[#F0F3FF] rounded-tl-[10px] rounded-tr-[10px] border">
-        <div class="py-[18px] px-[20px]">#</div>
-        <div class="flex-1 text-[14px] text-[#303030] font-bold py-[18px] px-[20px]">Nama Personil</div>
-        <div class="flex-1 text-[14px] text-[#303030] font-bold py-[18px] py-[18px] px-[20px]">Email</div>
-        <div class="flex-1 text-[14px] text-[#303030] font-bold py-[18px] py-[18px] px-[20px]">No Telepon</div>
-      </div>
-      <div v-if="teamStore.teams && teamStore.teams.length > 0">
-          <div v-for="(member, index) in teamStore.teams" :key="member.id" class="flex flex-row pt-[6px] pb-[6px] border-r border-b border-l">
-            <div class="text-[14px] text-[#6E6E6E] font-medium py-[18px] px-[20px]">{{ index + 1 }}</div>
-            <div class="flex-1 text-[14px] text-[#303030] font-bold py-[18px] px-[20px]">
-              <strong>{{ member.name }}</strong>
-            </div>
-            <div class="flex-1 text-[14px] text-[#6E6E6E] font-medium py-[18px] px-[20px]">
-              <span>{{ member.email }}</span>
-            </div>
-            <div class="flex-1 text-[14px] text-[#6E6E6E] font-medium py-[18px] px-[20px]">
-              <span>{{ member.phone_number }}</span>
-            </div>
-          </div>
-        </div>
-
-      <div v-else>
-        <p>Tidak ada anggota tim untuk ditampilkan.</p>
-      </div>
+      <CardDetailPersonil :members="teamStore.teams"> </CardDetailPersonil>
     </div>
 
   </div>
@@ -125,7 +51,7 @@
       <label for="namalist" class="block mb-2 text-sm font-medium text-gray-900"
         >Nama list</label
       >
-      <InputPrimary v-model="formData.description" type="text" id="namalist" placeholder="Masukan nama list" required></InputPrimary>
+      <InputPrimary v-model="formData.description" type="text" id="namalist" placeholder="Masukan nama list" :intent="'primary2'" required></InputPrimary>
     </div>
   </Modal>
 
@@ -133,14 +59,14 @@
     <label for="team" class="block mb-2 text-sm font-medium text-gray-900"
       >Email</label
     >
-    <InputPrimary v-model="formData.email" type="text" id="team" placeholder="Masukan wmail" required></InputPrimary>
+    <InputPrimary v-model="formData.email" type="text" id="team" placeholder="Masukan mail" :intent="'primary2'" required></InputPrimary>
   </Modal>
 
   <Modal v-model="openModal3" title="Update project" @submit="edit(todo)">
     <label for="editTodo" class="block mb-2 text-sm font-medium text-gray-900"
       >Nama nama project</label
     >
-    <InputPrimary v-model="formData.description" type="text" id="editTodo" placeholder="Masukan nama list" required></InputPrimary>
+    <InputPrimary v-model="formData.description" type="text" id="editTodo" placeholder="Masukan nama list" :intent="'primary2'" required></InputPrimary>
 
   </Modal>
 </template>

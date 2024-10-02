@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="flex items-center">
     <input
       :class="customChackBox"
       type="checkbox"
       :id="bookId"
       v-model="isChecked"
     />
-    <label :for="bookId" class="text-[#303030]">{{ title }}</label>
+    <label :for="bookId" class="text-[#303030] text-[14px] font-bold">{{ title }}</label>
   </div>
 </template>
 
