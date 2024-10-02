@@ -123,7 +123,6 @@ export default {
         }).catch(err => {
             console.error("Fetch error:", err); // Log jika ada error
         });
-        
       }
 
       // Jika tidak ditemukan, fetch ulang data dari server
@@ -187,6 +186,7 @@ export default {
         this.selectedTodo.description = this.formData.description;
         this.selectedTodo.is_complete = this.formData.is_complete;
         
+        this.loadProject()
         // Tutup modal
         this.openModal3 = false;
         
@@ -198,6 +198,7 @@ export default {
     async deleteTodo(todo) {
       try {
         await this.todoStore.delete(todo.id);
+        this.loadProject()
       } catch (error) {
         console.error("Failed to delete todo:", error);
       }
@@ -223,6 +224,7 @@ export default {
           project_id: this.formData.project_id,
           description: this.formData.description,
         });
+        this.loadProject()
         this.formData.description = null;
       } catch (error) {
         console.error("Gagal menambahkan project:", error);
@@ -241,6 +243,7 @@ export default {
           project_id: this.formData.project_id,
           email: this.formData.email,
         });
+        this.loadProject(); 
         this.formData.email = null;
       } catch (error) {
         console.error("Gagal menambahkan team:", error);
