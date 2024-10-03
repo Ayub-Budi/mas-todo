@@ -22,13 +22,13 @@
     </div>
     
     <!-- Pagination -->
-    <div class="flex justify-between mt-5">
+    <div class="flex items-center justify-between mt-5">
       <div><p class="text-[14px] text-[#303030] font-medium">Menampilkan {{ startItem }} sampai {{ endItem }} dari {{ totalProjects }} keseluruhan</p></div>
       <div>
         <button
           @click="prevPage"
           :disabled="currentPage === 1"
-          class="px-3 py-1 mx-1 bg-gray-200 text-gray-700 rounded-[12px]"
+          class="px-3 py-1 mx-1 w-[60px] h-[42px] bg-gray-200 text-gray-700 rounded-[12px]"
         >
           Prev
         </button>
@@ -37,7 +37,7 @@
           :key="page"
           @click="currentPage = page"
           :class="[
-            'px-3 py-1 mx-1',
+            'px-3 py-1 mx-1 w-[42px] h-[42px]',
             currentPage === page
               ? 'bg-blue-600 text-white'
               : 'bg-gray-200 text-gray-700',
@@ -50,7 +50,7 @@
         <button
           @click="nextPage"
           :disabled="currentPage === totalPages"
-          class="px-3 py-1 mx-1 bg-gray-200 text-gray-700 rounded-[12px]"
+          class="px-3 py-1 mx-1 w-[60px] h-[42px] bg-gray-200 text-gray-700 rounded-[12px]"
         >
           Next
         </button>

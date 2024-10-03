@@ -25,7 +25,7 @@
           <span class="text-[#303030] text-[14px] font-bold">{{ formatDate(todo.updated_at) }}</span>
         </p>
       </div>
-      <div class="flex-2 gap-[8px]">
+      <div class="gap-[8px]">
         <div>
           <button @click="openEditModal(todo)" class="bg-[#CCE5FE] rounded-[5px] p-[8px] mr-[4px] gap-[10px]">
             <i class="ri-edit-box-line text-[#007DFC]"></i>

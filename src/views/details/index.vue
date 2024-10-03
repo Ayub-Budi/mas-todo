@@ -59,7 +59,7 @@
     <label for="team" class="block mb-2 text-sm font-medium text-gray-900"
       >Email</label
     >
-    <InputPrimary v-model="formData.email" type="text" id="team" placeholder="Masukan mail" :intent="'primary2'" required></InputPrimary>
+    <InputPrimary v-model="formData.email" type="text" id="team"  placeholder="Masukan mail" :intent="'primary2'" required></InputPrimary>
   </Modal>
 
   <Modal v-model="openModal3" title="Update project" @submit="edit(todo)">
@@ -101,19 +101,19 @@ export default {
     };
   },
   async mounted() {
-    await this.loadProject(); // Panggil fungsi loadProject saat komponen dipasang
+    await this.loadProject();
   },
   watch: {
     id: {
       immediate: true,
       handler() {
-        this.loadProject(); // Panggil loadProject saat 'id' berubah
+        this.loadProject();
       },
     },
   },
   methods: {
     async loadProject() {
-      // Coba ambil detail project dari store berdasarkan id
+      
       await this.projectStore.detail(this.id);
       this.project = this.projectStore.project;
 
@@ -125,7 +125,7 @@ export default {
         });
       }
 
-      // Jika tidak ditemukan, fetch ulang data dari server
+      
       if (!this.project) {
         await this.projectStore.fetch();
         await this.projectStore.detail(this.id);
@@ -141,7 +141,7 @@ export default {
         hour: "2-digit",
         minute: "2-digit",
       };
-      return date.toLocaleString("en-GB", options).replace(",", ""); // Format UK (DD/MM/YYYY HH:MM)
+      return date.toLocaleString("en-GB", options).replace(",", "");
     },
     setModal() {
       this.isOpen = !this.isOpen;
@@ -176,18 +176,15 @@ export default {
           return;
         }
         
-        // Update data melalui store atau API
         await this.todoStore.update(this.selectedTodo.id, {
           description: this.formData.description,
           is_complete: this.formData.is_complete,
         });
 
-        // Update nilai todo di frontend
         this.selectedTodo.description = this.formData.description;
         this.selectedTodo.is_complete = this.formData.is_complete;
         
         this.loadProject()
-        // Tutup modal
         this.openModal3 = false;
         
       } catch (error) {
@@ -226,6 +223,7 @@ export default {
         });
         this.loadProject()
         this.formData.description = null;
+        this.openModal1 = false;
       } catch (error) {
         console.error("Gagal menambahkan project:", error);
       }
@@ -245,6 +243,7 @@ export default {
         });
         this.loadProject(); 
         this.formData.email = null;
+        this.openModal2 = false;
       } catch (error) {
         console.error("Gagal menambahkan team:", error);
       }
