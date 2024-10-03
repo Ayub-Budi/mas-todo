@@ -6,7 +6,7 @@
       </div>
       <div class="flex gap-[10px]">
         <div>
-          <ButtonPrimary :intent="'primary2'" @click="openModal1 = true">+ + Tambah to-do</ButtonPrimary>
+          <ButtonPrimary :intent="'primary2'" @click="openModal1 = true">+ Tambah to-do</ButtonPrimary>
         </div>
         <div>
           <ButtonPrimary :intent="'primary2'" @click="openModal2 = true">+ Undang personil</ButtonPrimary>
@@ -17,19 +17,21 @@
       </div>
     </div>
 
-    <div class="flex flex-col" v-if="project.todo && project.todo.length > 0">
-      <div class="py-[16px]">
-        <ButtonMinimal @click="activeTab = 'todo'">To-do list</ButtonMinimal>
-        <ButtonMinimal @click="activeTab = 'personil'">Personil</ButtonMinimal>
-      </div>
-      
-      <!-- todo -->
-      <div v-if="activeTab === 'todo'" class="border rounded-[10px]">
-        <CardDetailTodo v-for="todo in project.todo" :key="todo.id" :todo="todo" v-on:todoValue="toggleComplete" v-on:openModal="openEditModal" v-on:deletetodo="deleteTodo"></CardDetailTodo>
-      </div>
+    <div class="py-[16px]">
+      <ButtonMinimal @click="activeTab = 'todo'">To-do list</ButtonMinimal>
+      <ButtonMinimal @click="activeTab = 'personil'">Personil</ButtonMinimal>
     </div>
-    <div v-else>
-      <p>Tidak ada tugas untuk ditampilkan.</p>
+
+    <div v-if="activeTab === 'todo'">
+      <div class="flex flex-col" v-if="project.todo && project.todo.length > 0">      
+        <!-- todo -->
+        <div class="border rounded-[10px]">
+          <CardDetailTodo v-for="todo in project.todo" :key="todo.id" :todo="todo" v-on:todoValue="toggleComplete" v-on:openModal="openEditModal" v-on:deletetodo="deleteTodo"></CardDetailTodo>
+        </div>
+      </div>
+      <div v-else>
+        <p>Tidak ada tugas untuk ditampilkan.</p>
+      </div>
     </div>
     <div v-if="activeTab === 'personil'">
       <CardDetailPersonil :members="teamStore.teams"> </CardDetailPersonil>

@@ -46,7 +46,6 @@
         >
           {{ page }}
         </button>
-
         <button
           @click="nextPage"
           :disabled="currentPage === totalPages"
@@ -68,7 +67,6 @@
         </p>
         <ButtonPrimary class="mt-[10px]" :intent="'primary2'" @click="openModal">Buat project</ButtonPrimary>
         <!-- <ButtonPrimary @click="setModal">+ Buat project baru</ButtonPrimary> -->
-
       </div>
     </div>
   </div>
